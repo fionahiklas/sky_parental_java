@@ -15,13 +15,22 @@ public interface MovieService {
     }
 
     /**
-     *
+     * Internal failure for the service
      */
     class TechnicalFailureException extends Exception
     {
 
     }
 
+
+    /**
+     * Return the parental control level for a given movie
+     *
+     * @param movieId
+     * @return String representation of parental control
+     * @throws TitleNotFoundException
+     * @throws TechnicalFailureException
+     */
     String getParentalControlLevel(String movieId)
             throws TitleNotFoundException,
             TechnicalFailureException;
