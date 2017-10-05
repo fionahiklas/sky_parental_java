@@ -29,6 +29,7 @@ public class SkyParentalControl implements ParentalControlService
     @Override
     public boolean canWatch(String movieId) {
         int movieLevelOrdinal = 0;
+        boolean canWatchResult = false;
 
         try
         {
@@ -36,6 +37,11 @@ public class SkyParentalControl implements ParentalControlService
                     ParentalControlLevel.valueOf(
                             movieService.getParentalControlLevel(movieId));
             movieLevelOrdinal = movieLevel.ordinal();
+            canWatchResult = ( preference.ordinal() >= movieLevelOrdinal );
+        }
+        catch (MovieService.TechnicalFailureException tfe)
+        {
+            // Do nothing, simply return false
         }
         catch (Exception ee)
         {
@@ -43,7 +49,7 @@ public class SkyParentalControl implements ParentalControlService
             throw new RuntimeException(ee);
         }
 
-        return ( preference.ordinal() >= movieLevelOrdinal );
+        return canWatchResult;
     }
 
     public void setMovieService(MovieService movieService)
