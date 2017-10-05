@@ -6,15 +6,16 @@ package com.hiklas.mucking.around;
  */
 public class SkyParentalControl implements ParentalControlService
 {
+    private ParentalControlLevel preference;
 
     @Override
     public void setPreference(ParentalControlLevel level) {
-
+        preference = level;
     }
 
     @Override
     public ParentalControlLevel getPreference() {
-        return null;
+        return preference;
     }
 
     @Override
