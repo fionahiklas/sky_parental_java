@@ -6,6 +6,14 @@ package com.hiklas.mucking.around;
  */
 public class SkyParentalControl implements ParentalControlService
 {
+    /**
+     * Instance of the movie service to call for ratings
+     */
+    private MovieService movieService;
+
+    /**
+     * Current preference
+     */
     private ParentalControlLevel preference;
 
     @Override
@@ -20,6 +28,26 @@ public class SkyParentalControl implements ParentalControlService
 
     @Override
     public boolean canWatch(String movieId) {
-        return false;
+        int movieLevelOrdinal = 0;
+
+        try
+        {
+            ParentalControlLevel movieLevel =
+                    ParentalControlLevel.valueOf(
+                            movieService.getParentalControlLevel(movieId));
+            movieLevelOrdinal = movieLevel.ordinal();
+        }
+        catch (Exception ee)
+        {
+            // Temporary for testing purposes
+            throw new RuntimeException(ee);
+        }
+
+        return ( preference.ordinal() >= movieLevelOrdinal );
+    }
+
+    public void setMovieService(MovieService movieService)
+    {
+        this.movieService = movieService;
     }
 }
