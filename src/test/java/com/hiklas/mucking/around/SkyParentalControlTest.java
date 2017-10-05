@@ -8,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 
@@ -77,6 +78,18 @@ public class SkyParentalControlTest
 
         boolean result = skyParentalControlToTest.canWatch(FAULTY_MOVIE);
         assertThat(result, equalTo(false));
+    }
+
+    @Test( expected = MovieService.TitleNotFoundException.class )
+    public void test_throws_exception_if_title_not_found() throws Exception
+    {
+        when(mockMovieService.getParentalControlLevel(UNKOWN_MOVIE))
+                .thenThrow( new MovieService.TitleNotFoundException() );
+
+        skyParentalControlToTest.setPreference(ParentalControlLevel.U);
+
+        boolean result = skyParentalControlToTest.canWatch(UNKOWN_MOVIE);
+        fail();
     }
 
 }

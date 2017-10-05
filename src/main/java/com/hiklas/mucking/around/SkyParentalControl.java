@@ -27,7 +27,7 @@ public class SkyParentalControl implements ParentalControlService
     }
 
     @Override
-    public boolean canWatch(String movieId) {
+    public boolean canWatch(String movieId) throws MovieService.TitleNotFoundException {
         int movieLevelOrdinal = 0;
         boolean canWatchResult = false;
 
@@ -42,11 +42,6 @@ public class SkyParentalControl implements ParentalControlService
         catch (MovieService.TechnicalFailureException tfe)
         {
             // Do nothing, simply return false
-        }
-        catch (Exception ee)
-        {
-            // Temporary for testing purposes
-            throw new RuntimeException(ee);
         }
 
         return canWatchResult;

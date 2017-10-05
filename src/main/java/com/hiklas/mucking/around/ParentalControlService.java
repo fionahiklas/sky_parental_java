@@ -26,5 +26,5 @@ public interface ParentalControlService {
      * @param movieId
      * @return true if the movie can be watched, false if not or on error
      */
-    boolean canWatch(String movieId);
+    boolean canWatch(String movieId) throws MovieService.TitleNotFoundException;
 }
