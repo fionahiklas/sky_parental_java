@@ -17,7 +17,9 @@ public class SkyParentalControlTest
 {
     public static final String EIGHTEEN_MOVIE = "Long kiss goodnight";
 
-    public static final String UNKOWN_MOVIE = "Star Trek VII - The Search for more Willian Shatner";
+    public static final String UNIVERSAL_MOVIE = "Muppets Christmas Carol";
+
+    public static final String UNKNOWN_MOVIE = "Star Trek VII - The Search for more Willian Shatner";
 
     public static final String FAULTY_MOVIE = "Short Circuit II";
 
@@ -57,6 +59,41 @@ public class SkyParentalControlTest
     }
 
     @Test
+    public void test_cannot_watch_eighteen_with_fifteen_preference() throws Exception
+    {
+        when(mockMovieService.getParentalControlLevel(EIGHTEEN_MOVIE))
+                .thenReturn(ParentalControlLevel.EIGHTEEN.name());
+
+        skyParentalControlToTest.setPreference(ParentalControlLevel.FIFTEEN);
+
+        boolean result = skyParentalControlToTest.canWatch(EIGHTEEN_MOVIE);
+        assertThat(result, equalTo(false));
+    }
+
+    @Test
+    public void test_can_watch_universal_with_any_preference() throws Exception
+    {
+        when(mockMovieService.getParentalControlLevel(UNIVERSAL_MOVIE))
+                .thenReturn(ParentalControlLevel.U.name());
+
+        skyParentalControlToTest.setPreference(ParentalControlLevel.U);
+        assertThat(skyParentalControlToTest.canWatch(UNIVERSAL_MOVIE), equalTo(true));
+
+        skyParentalControlToTest.setPreference(ParentalControlLevel.PG);
+        assertThat(skyParentalControlToTest.canWatch(UNIVERSAL_MOVIE), equalTo(true));
+
+        skyParentalControlToTest.setPreference(ParentalControlLevel.TWELVE);
+        assertThat(skyParentalControlToTest.canWatch(UNIVERSAL_MOVIE), equalTo(true));
+
+        skyParentalControlToTest.setPreference(ParentalControlLevel.FIFTEEN);
+        assertThat(skyParentalControlToTest.canWatch(UNIVERSAL_MOVIE), equalTo(true));
+
+        skyParentalControlToTest.setPreference(ParentalControlLevel.EIGHTEEN);
+        assertThat(skyParentalControlToTest.canWatch(UNIVERSAL_MOVIE), equalTo(true));
+    }
+
+
+    @Test
     public void test_can_watch_eighteen_with_eighteen_preference() throws Exception
     {
         when(mockMovieService.getParentalControlLevel(EIGHTEEN_MOVIE))
@@ -83,12 +120,12 @@ public class SkyParentalControlTest
     @Test( expected = MovieService.TitleNotFoundException.class )
     public void test_throws_exception_if_title_not_found() throws Exception
     {
-        when(mockMovieService.getParentalControlLevel(UNKOWN_MOVIE))
+        when(mockMovieService.getParentalControlLevel(UNKNOWN_MOVIE))
                 .thenThrow( new MovieService.TitleNotFoundException() );
 
         skyParentalControlToTest.setPreference(ParentalControlLevel.U);
 
-        boolean result = skyParentalControlToTest.canWatch(UNKOWN_MOVIE);
+        boolean result = skyParentalControlToTest.canWatch(UNKNOWN_MOVIE);
         fail();
     }
 
